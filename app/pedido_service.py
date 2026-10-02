@@ -1,2 +1,7 @@
 def calcular_subtotal(productos):
-    return 0
+    subtotal = 0
+
+    for producto in productos:
+        subtotal += producto["precio"] * producto["cantidad"]
+
+    return subtotal
