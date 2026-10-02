@@ -16,3 +16,10 @@ def calcular_descuento(subtotal, tipo_cliente):
         return subtotal * 0.05
 
     return 0
+
+def calcular_impuesto(monto_con_descuento):
+    return monto_con_descuento * 0.18
+
+
+def calcular_total(monto_con_descuento, impuesto):
+    return monto_con_descuento + impuesto
