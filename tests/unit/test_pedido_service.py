@@ -1,4 +1,10 @@
-from app.pedido_service import calcular_subtotal, calcular_descuento
+from app.pedido_service import (
+    calcular_subtotal,
+    calcular_descuento,
+    calcular_impuesto,
+    calcular_total
+)
+import pytest
 
 def test_calcular_subtotal_pedido_vacio():
     # Arrange
@@ -74,3 +80,17 @@ def test_descuento_mayorista_mayor_a_500():
 
     # Assert
     assert descuento == 120
+
+def test_calcular_impuesto_y_total():
+    # Arrange
+    subtotal = 200
+    descuento = 20
+    monto_con_descuento = subtotal - descuento
+
+    # Act
+    impuesto = calcular_impuesto(monto_con_descuento)
+    total = calcular_total(monto_con_descuento, impuesto)
+
+    # Assert
+    assert impuesto == pytest.approx(32.40)
+    assert total == pytest.approx(212.40)
