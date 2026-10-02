@@ -23,3 +23,18 @@ def calcular_impuesto(monto_con_descuento):
 
 def calcular_total(monto_con_descuento, impuesto):
     return monto_con_descuento + impuesto
+
+
+def test_calcular_subtotal_con_cantidad_negativa():
+    # Arrange
+    productos = [
+        {
+            "nombre": "Teclado",
+            "precio": 100,
+            "cantidad": -2
+        }
+    ]
+
+    # Act / Assert
+    with pytest.raises(ValueError):
+        calcular_subtotal(productos)
