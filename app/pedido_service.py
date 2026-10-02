@@ -1,3 +1,5 @@
+from app.models import Pedido
+
 def calcular_subtotal(productos):
     subtotal = 0
 
@@ -41,3 +43,31 @@ def test_calcular_subtotal_con_cantidad_negativa():
     # Act / Assert
     with pytest.raises(ValueError):
         calcular_subtotal(productos)
+
+class PedidoService:
+
+    def __init__(self, repository):
+        self.repository = repository
+
+    def crear_pedido(self, productos, tipo_cliente):
+        subtotal = calcular_subtotal(productos)
+        descuento = calcular_descuento(subtotal, tipo_cliente)
+
+        monto_con_descuento = subtotal - descuento
+
+        impuesto = calcular_impuesto(monto_con_descuento)
+        total = calcular_total(monto_con_descuento, impuesto)
+
+        pedido = Pedido(
+            tipo_cliente=tipo_cliente,
+            productos=productos,
+            subtotal=subtotal,
+            descuento=descuento,
+            impuesto=impuesto,
+            total=total
+        )
+
+        return self.repository.guardar(pedido)
+
+    def obtener_pedido(self, pedido_id):
+        return self.repository.obtener_por_id(pedido_id)
