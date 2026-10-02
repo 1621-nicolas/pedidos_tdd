@@ -1,5 +1,4 @@
-from app.pedido_service import calcular_subtotal
-
+from app.pedido_service import calcular_subtotal, calcular_descuento
 
 def test_calcular_subtotal_pedido_vacio():
     # Arrange
@@ -31,3 +30,13 @@ def test_calcular_subtotal_con_productos():
 
     # Assert
     assert subtotal == 250
+def test_descuento_cliente_vip():
+    # Arrange
+    subtotal = 200
+    tipo_cliente = "VIP"
+
+    # Act
+    descuento = calcular_descuento(subtotal, tipo_cliente)
+
+    # Assert
+    assert descuento == 20
