@@ -2,6 +2,9 @@ def calcular_subtotal(productos):
     subtotal = 0
 
     for producto in productos:
+        if producto["cantidad"] < 0:
+            raise ValueError("La cantidad no puede ser negativa")
+
         subtotal += producto["precio"] * producto["cantidad"]
 
     return subtotal
