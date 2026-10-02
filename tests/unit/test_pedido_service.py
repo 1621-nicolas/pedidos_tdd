@@ -94,3 +94,14 @@ def test_calcular_impuesto_y_total():
     # Assert
     assert impuesto == pytest.approx(32.40)
     assert total == pytest.approx(212.40)
+
+def test_descuento_cliente_regular():
+    # Arrange
+    subtotal = 300
+    tipo_cliente = "REGULAR"
+
+    # Act
+    descuento = calcular_descuento(subtotal, tipo_cliente)
+
+    # Assert
+    assert descuento == 0
