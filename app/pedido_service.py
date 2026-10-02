@@ -1,15 +1,18 @@
 from app.models import Pedido
 
-def calcular_subtotal(productos):
-    subtotal = 0
-
+def validar_productos(productos):
     for producto in productos:
         if producto["cantidad"] < 0:
             raise ValueError("La cantidad no puede ser negativa")
 
-        subtotal += producto["precio"] * producto["cantidad"]
 
-    return subtotal
+def calcular_subtotal(productos):
+    validar_productos(productos)
+
+    return sum(
+        producto["precio"] * producto["cantidad"]
+        for producto in productos
+    )
 def calcular_descuento(subtotal, tipo_cliente):
     if tipo_cliente == "VIP":
         return subtotal * 0.10
