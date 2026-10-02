@@ -9,4 +9,10 @@ def calcular_descuento(subtotal, tipo_cliente):
     if tipo_cliente == "VIP":
         return subtotal * 0.10
 
+    if tipo_cliente == "MAYORISTA":
+        if subtotal > 500:
+            return subtotal * 0.20
+
+        return subtotal * 0.05
+
     return 0
