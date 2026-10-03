@@ -23,17 +23,22 @@ def calcular_subtotal(productos):
     )
 
 
-def calcular_descuento(subtotal, tipo_cliente):
+def _porcentaje_descuento(subtotal, tipo_cliente):
     if tipo_cliente == "VIP":
-        return subtotal * DESCUENTO_VIP
+        return DESCUENTO_VIP
 
     if tipo_cliente == "MAYORISTA":
-        if subtotal > LIMITE_MAYORISTA:
-            return subtotal * DESCUENTO_MAYORISTA_ALTO
-
-        return subtotal * DESCUENTO_MAYORISTA_BAJO
+        return (
+            DESCUENTO_MAYORISTA_ALTO
+            if subtotal > LIMITE_MAYORISTA
+            else DESCUENTO_MAYORISTA_BAJO
+        )
 
     return 0
+
+
+def calcular_descuento(subtotal, tipo_cliente):
+    return subtotal * _porcentaje_descuento(subtotal, tipo_cliente)
 
 
 def calcular_impuesto(monto_con_descuento):
