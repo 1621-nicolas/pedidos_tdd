@@ -1,6 +1,13 @@
 from app.models import Pedido
 
 
+DESCUENTO_VIP = 0.10
+DESCUENTO_MAYORISTA_ALTO = 0.20
+DESCUENTO_MAYORISTA_BAJO = 0.05
+LIMITE_MAYORISTA = 500
+TASA_IMPUESTO = 0.18
+
+
 def validar_productos(productos):
     for producto in productos:
         if producto["cantidad"] < 0:
@@ -18,19 +25,19 @@ def calcular_subtotal(productos):
 
 def calcular_descuento(subtotal, tipo_cliente):
     if tipo_cliente == "VIP":
-        return subtotal * 0.10
+        return subtotal * DESCUENTO_VIP
 
     if tipo_cliente == "MAYORISTA":
-        if subtotal > 500:
-            return subtotal * 0.20
+        if subtotal > LIMITE_MAYORISTA:
+            return subtotal * DESCUENTO_MAYORISTA_ALTO
 
-        return subtotal * 0.05
+        return subtotal * DESCUENTO_MAYORISTA_BAJO
 
     return 0
 
 
 def calcular_impuesto(monto_con_descuento):
-    return monto_con_descuento * 0.18
+    return monto_con_descuento * TASA_IMPUESTO
 
 
 def calcular_total(monto_con_descuento, impuesto):
