@@ -1,5 +1,13 @@
 from app.models import Pedido
 
+
+DESCUENTO_VIP = 0.10
+DESCUENTO_MAYORISTA_ALTO = 0.20
+DESCUENTO_MAYORISTA_BAJO = 0.05
+LIMITE_MAYORISTA = 500
+TASA_IMPUESTO = 0.18
+
+
 def validar_productos(productos):
     for producto in productos:
         if producto["cantidad"] < 0:
@@ -13,39 +21,37 @@ def calcular_subtotal(productos):
         producto["precio"] * producto["cantidad"]
         for producto in productos
     )
-def calcular_descuento(subtotal, tipo_cliente):
+
+
+def _porcentaje_descuento(subtotal, tipo_cliente):
     if tipo_cliente == "VIP":
-        return subtotal * 0.10
+        return DESCUENTO_VIP
 
     if tipo_cliente == "MAYORISTA":
-        if subtotal > 500:
-            return subtotal * 0.20
-
-        return subtotal * 0.05
+        return (
+            DESCUENTO_MAYORISTA_ALTO
+            if subtotal > LIMITE_MAYORISTA
+            else DESCUENTO_MAYORISTA_BAJO
+        )
 
     return 0
 
+
+def calcular_descuento(subtotal, tipo_cliente):
+    return subtotal * _porcentaje_descuento(subtotal, tipo_cliente)
+
+
+def calcular_monto_con_descuento(subtotal, descuento):
+    return subtotal - descuento
+
+
 def calcular_impuesto(monto_con_descuento):
-    return monto_con_descuento * 0.18
+    return monto_con_descuento * TASA_IMPUESTO
 
 
 def calcular_total(monto_con_descuento, impuesto):
     return monto_con_descuento + impuesto
 
-
-def test_calcular_subtotal_con_cantidad_negativa():
-    # Arrange
-    productos = [
-        {
-            "nombre": "Teclado",
-            "precio": 100,
-            "cantidad": -2
-        }
-    ]
-
-    # Act / Assert
-    with pytest.raises(ValueError):
-        calcular_subtotal(productos)
 
 class PedidoService:
 
@@ -55,9 +61,10 @@ class PedidoService:
     def crear_pedido(self, productos, tipo_cliente):
         subtotal = calcular_subtotal(productos)
         descuento = calcular_descuento(subtotal, tipo_cliente)
-
-        monto_con_descuento = subtotal - descuento
-
+        monto_con_descuento = calcular_monto_con_descuento(
+            subtotal,
+            descuento
+        )
         impuesto = calcular_impuesto(monto_con_descuento)
         total = calcular_total(monto_con_descuento, impuesto)
 

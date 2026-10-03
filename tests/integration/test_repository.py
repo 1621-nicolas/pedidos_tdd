@@ -29,17 +29,17 @@ def test_guardar_y_recuperar_pedido(tmp_path):
     # Assert
     assert pedido_guardado.id is not None
     assert pedido_recuperado is not None
-
     assert pedido_recuperado.id == pedido_guardado.id
     assert pedido_recuperado.tipo_cliente == "VIP"
     assert pedido_recuperado.subtotal == 200
     assert pedido_recuperado.descuento == 20
     assert pedido_recuperado.impuesto == 32.4
     assert pedido_recuperado.total == 212.4
+
+
 def test_pedido_persiste_en_nueva_instancia_del_repositorio(tmp_path):
     # Arrange
     db_path = tmp_path / "test_persistencia.db"
-
     repository_1 = PedidoRepository(str(db_path))
 
     pedido = Pedido(
@@ -69,6 +69,7 @@ def test_pedido_persiste_en_nueva_instancia_del_repositorio(tmp_path):
     assert pedido_recuperado.tipo_cliente == "REGULAR"
     assert pedido_recuperado.total == 354
 
+
 def test_obtener_pedido_inexistente_devuelve_none(tmp_path):
     # Arrange
     db_path = tmp_path / "test_inexistente.db"
@@ -79,3 +80,35 @@ def test_obtener_pedido_inexistente_devuelve_none(tmp_path):
 
     # Assert
     assert pedido is None
+
+
+def test_guardar_dos_pedidos_asigna_ids_unicos(tmp_path):
+    # Arrange
+    db_path = tmp_path / "test_ids_unicos.db"
+    repository = PedidoRepository(str(db_path))
+
+    pedido_1 = Pedido(
+        tipo_cliente="REGULAR",
+        productos=[],
+        subtotal=0,
+        descuento=0,
+        impuesto=0,
+        total=0
+    )
+    pedido_2 = Pedido(
+        tipo_cliente="VIP",
+        productos=[],
+        subtotal=0,
+        descuento=0,
+        impuesto=0,
+        total=0
+    )
+
+    # Act
+    guardado_1 = repository.guardar(pedido_1)
+    guardado_2 = repository.guardar(pedido_2)
+
+    # Assert
+    assert guardado_1.id is not None
+    assert guardado_2.id is not None
+    assert guardado_1.id != guardado_2.id
