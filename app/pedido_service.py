@@ -41,6 +41,10 @@ def calcular_descuento(subtotal, tipo_cliente):
     return subtotal * _porcentaje_descuento(subtotal, tipo_cliente)
 
 
+def calcular_monto_con_descuento(subtotal, descuento):
+    return subtotal - descuento
+
+
 def calcular_impuesto(monto_con_descuento):
     return monto_con_descuento * TASA_IMPUESTO
 
@@ -57,9 +61,10 @@ class PedidoService:
     def crear_pedido(self, productos, tipo_cliente):
         subtotal = calcular_subtotal(productos)
         descuento = calcular_descuento(subtotal, tipo_cliente)
-
-        monto_con_descuento = subtotal - descuento
-
+        monto_con_descuento = calcular_monto_con_descuento(
+            subtotal,
+            descuento
+        )
         impuesto = calcular_impuesto(monto_con_descuento)
         total = calcular_total(monto_con_descuento, impuesto)
 
