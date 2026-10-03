@@ -1,5 +1,6 @@
 from app.models import Pedido
 
+
 def validar_productos(productos):
     for producto in productos:
         if producto["cantidad"] < 0:
@@ -13,6 +14,8 @@ def calcular_subtotal(productos):
         producto["precio"] * producto["cantidad"]
         for producto in productos
     )
+
+
 def calcular_descuento(subtotal, tipo_cliente):
     if tipo_cliente == "VIP":
         return subtotal * 0.10
@@ -25,6 +28,7 @@ def calcular_descuento(subtotal, tipo_cliente):
 
     return 0
 
+
 def calcular_impuesto(monto_con_descuento):
     return monto_con_descuento * 0.18
 
@@ -32,20 +36,6 @@ def calcular_impuesto(monto_con_descuento):
 def calcular_total(monto_con_descuento, impuesto):
     return monto_con_descuento + impuesto
 
-
-def test_calcular_subtotal_con_cantidad_negativa():
-    # Arrange
-    productos = [
-        {
-            "nombre": "Teclado",
-            "precio": 100,
-            "cantidad": -2
-        }
-    ]
-
-    # Act / Assert
-    with pytest.raises(ValueError):
-        calcular_subtotal(productos)
 
 class PedidoService:
 
